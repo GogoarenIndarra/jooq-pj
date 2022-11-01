@@ -15,17 +15,46 @@
     <description>SpringBoot application with jOOQ (Java Object Orientated Query).</description>
     <properties>
         <java.version>17</java.version>
+        <jooq.version>3.16.6</jooq.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
     </properties>
     <dependencies>
+
+        <!-- Spring framework Web starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+        <!-- jOOQ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jooq</artifactId>
+        </dependency>
+
+        <!-- Liquibase -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.2.Final</version>
         </dependency>
 
         <dependency>
@@ -33,6 +62,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -42,10 +72,32 @@
 
     <build>
         <plugins>
-			<!--jOOQ-->
+            <!-- MapStruct -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+			<!-- jOOQ -->
             <plugin>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -56,35 +108,36 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>com.h2database</groupId>
-                        <artifactId>h2</artifactId>
-                        <version>2.1.214</version>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
                     </dependency>
                 </dependencies>
                 <configuration>
                     <jdbc>
-						<driver>org.h2.Driver</driver>
-                        <url>jdbc:h2:mem:jooq-database</url>
-                        <user>sa</user>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>jdbc:postgresql://db_url:5432/jooqdb</url>
+                        <user>postgres</user>
+                        <password>postgres</password>
                     </jdbc>
                     <generator>
-						<generate>
-							<javatimetypes>true</javatimetypes>
-						</generate>
+                        <generate>
+                            <javaTimeTypes>true</javaTimeTypes>
+                        </generate>
                         <database>
-							<name>org.jooq.meta.h2.H2Database</name>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <inputSchema>public</inputSchema>
                             <includes>.*</includes>
-							<excludes>info_schema.*</excludes>
+							<excludes>information_schema.*</excludes>
                         </database>
                         <target>
-                            <packageName>pl.jablonski</packageName>
-                            <directory>${project.build.directory}/generated-sources/jooq</directory>
+                            <packageName>pl.jablonski.jooqpj.model</packageName>
+                            <directory>target/generated-sources/jooq</directory>
                         </target>
                     </generator>
                 </configuration>
             </plugin>
 
-			<!--LOMBOK-->
+			<!-- Lombok -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

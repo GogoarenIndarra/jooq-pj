@@ -10,10 +10,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Table(name = "customers")
 @Entity
@@ -26,7 +29,7 @@ import javax.persistence.Table;
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -41,4 +44,7 @@ public class Customer {
 
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Car> cars;
 }

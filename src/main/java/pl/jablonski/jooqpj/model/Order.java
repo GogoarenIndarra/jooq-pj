@@ -30,7 +30,7 @@ import java.time.LocalDate;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -49,4 +49,8 @@ public class Order {
     @OneToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+    @OneToOne
+    @JoinColumn(name = "mechanic_id")
+    private Mechanic mechanic;
 }
