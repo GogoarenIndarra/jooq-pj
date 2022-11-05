@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -14,10 +15,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.Set;
 
 @Table(name = "cars")
@@ -41,10 +42,10 @@ public class Car {
     @Column(name = "model", nullable = false)
     private String model;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY)
+    private Set<Customer> customers = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Set<Order> orders;
 }
