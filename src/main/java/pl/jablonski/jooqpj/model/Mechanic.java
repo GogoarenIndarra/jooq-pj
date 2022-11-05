@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -39,6 +40,7 @@ public class Mechanic {
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mechanic", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Set<Order> orders;
 }

@@ -10,11 +10,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -46,11 +47,11 @@ public class Order {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "car_id")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 
-    @OneToOne
-    @JoinColumn(name = "mechanic_id")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "mechanic_id", nullable = false)
     private Mechanic mechanic;
 }
