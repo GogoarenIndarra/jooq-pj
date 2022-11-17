@@ -5,7 +5,14 @@ import pl.jablonski.jooqpj.dto.CustomerDto;
 import pl.jablonski.jooqpj.dto.MechanicDto;
 import pl.jablonski.jooqpj.dto.OrderDto;
 
+import java.time.LocalDate;
+
 public interface WorkshopService {
+
+    String getBestMechanic(String carBrand,
+                           LocalDate from,
+                           int minOrdersCount,
+                           String problemDescription);
 
     Long addCustomer(CustomerDto customerDto);
 
