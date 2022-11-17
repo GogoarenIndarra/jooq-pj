@@ -129,6 +129,11 @@
                             <inputSchema>public</inputSchema>
                             <includes>.*</includes>
 							<excludes>information_schema.*</excludes>
+							<excludes>
+                                    databasechangelog
+                                |   databasechangeloglock
+                                |   db_version
+                            </excludes>
                         </database>
                         <target>
                             <packageName>pl.jablonski.jooqpj</packageName>
