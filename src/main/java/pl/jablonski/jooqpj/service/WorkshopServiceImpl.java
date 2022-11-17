@@ -1,6 +1,7 @@
 package pl.jablonski.jooqpj.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import pl.jablonski.jooqpj.dto.CustomerDto;
 
 import pl.jablonski.jooqpj.dto.MechanicDto;
 import pl.jablonski.jooqpj.dto.OrderDto;
+import pl.jablonski.jooqpj.jooq.JooqRepository;
 import pl.jablonski.jooqpj.mapper.CarMapper;
 import pl.jablonski.jooqpj.mapper.CustomerMapper;
 
@@ -24,6 +26,7 @@ import pl.jablonski.jooqpj.repository.CustomerRepo;
 import pl.jablonski.jooqpj.repository.MechanicRepo;
 import pl.jablonski.jooqpj.repository.OrderRepo;
 
+import java.time.LocalDate;
 
 
 @Service
@@ -41,6 +44,17 @@ public class WorkshopServiceImpl implements WorkshopService {
     private final MechanicMapper mechanicMapper;
     private final OrderMapper orderMapper;
 
+    private final JooqRepository jooqRepository;
+
+
+    @SneakyThrows
+    @Override
+    public String getBestMechanic(final String carBrand,
+                                  final LocalDate from,
+                                  final int minOrdersCount,
+                                  final String problemDescription) {
+        return jooqRepository.getBestMechanicForOrder(carBrand, from, minOrdersCount, problemDescription);
+    }
 
     @Override
     public Long addCustomer(final CustomerDto customerDto) {

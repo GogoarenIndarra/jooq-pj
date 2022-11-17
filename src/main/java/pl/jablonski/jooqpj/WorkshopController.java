@@ -2,15 +2,14 @@ package pl.jablonski.jooqpj;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.jablonski.jooqpj.dto.CarDto;
 import pl.jablonski.jooqpj.dto.CustomerDto;
 import pl.jablonski.jooqpj.dto.MechanicDto;
 import pl.jablonski.jooqpj.dto.OrderDto;
 import pl.jablonski.jooqpj.service.WorkshopService;
 
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +17,15 @@ import pl.jablonski.jooqpj.service.WorkshopService;
 class WorkshopController {
 
     private final WorkshopService service;
+
+    @GetMapping("/best")
+    String getBestMechanic(@RequestParam final String carBrand,
+                           @RequestParam final String from,
+                           @RequestParam final int minOrdersCount,
+                           @RequestParam final String problemDescription) {
+
+        return service.getBestMechanic(carBrand, LocalDate.parse(from), minOrdersCount, problemDescription);
+    }
 
     @PostMapping("/customer")
     Long createCustomer(@RequestBody final CustomerDto customerDto) {
