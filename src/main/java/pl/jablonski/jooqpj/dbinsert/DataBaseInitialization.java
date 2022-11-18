@@ -43,8 +43,8 @@ public class DataBaseInitialization {
     private final MechanicMapper mechanicMapper;
     private final OrderMapper orderMapper;
 
-    Faker dataFaker = new Faker();
-    Random rand = new Random();
+    private final Faker dataFaker;
+    private final Random rand;
 
     private static final List<Long> mechanicsIds = new ArrayList<>();
     private static final List<Long> customersIds = new ArrayList<>();
