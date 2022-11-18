@@ -21,14 +21,14 @@ public class JooqRepositoryImpl implements JooqRepository {
                                           final String problemDescription) {
 
         return ConnectionManager.getConnection()
-                .select(MECHANICS.NAME, MECHANICS.SURNAME, CARS.MODEL, ORDERS.DESCRIPTION)
+                .select(MECHANICS.NAME, MECHANICS.SURNAME, count())
                 .from(MECHANICS)
                 .leftJoin(ORDERS).onKey()
                 .leftJoin(CARS).onKey()
                 .where(CARS.BRAND.eq(carBrand))
                 .and(ORDERS.FINISH_DATE.gt(from))
                 .and(ORDERS.DESCRIPTION.contains(problemDescription))
-                .groupBy(MECHANICS.NAME, MECHANICS.SURNAME, CARS.MODEL, ORDERS.DESCRIPTION)
+                .groupBy(MECHANICS.NAME, MECHANICS.SURNAME)
                 .having(count().greaterThan(minOrdersCount))
                 .orderBy(MECHANICS.SURNAME)
                 .fetch().toString();
