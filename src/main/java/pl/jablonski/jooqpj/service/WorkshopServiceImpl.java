@@ -7,18 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jablonski.jooqpj.dto.CarDto;
 import pl.jablonski.jooqpj.dto.CustomerDto;
-
 import pl.jablonski.jooqpj.dto.MechanicDto;
 import pl.jablonski.jooqpj.dto.OrderDto;
+import pl.jablonski.jooqpj.exception.EntityNotFoundException;
 import pl.jablonski.jooqpj.jooq.JooqRepository;
 import pl.jablonski.jooqpj.mapper.CarMapper;
 import pl.jablonski.jooqpj.mapper.CustomerMapper;
-
 import pl.jablonski.jooqpj.mapper.MechanicMapper;
 import pl.jablonski.jooqpj.mapper.OrderMapper;
 import pl.jablonski.jooqpj.model.Car;
 import pl.jablonski.jooqpj.model.Customer;
-
 import pl.jablonski.jooqpj.model.Mechanic;
 import pl.jablonski.jooqpj.model.Order;
 import pl.jablonski.jooqpj.repository.CarRepo;
@@ -27,7 +25,6 @@ import pl.jablonski.jooqpj.repository.MechanicRepo;
 import pl.jablonski.jooqpj.repository.OrderRepo;
 
 import java.time.LocalDate;
-
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +42,6 @@ public class WorkshopServiceImpl implements WorkshopService {
     private final OrderMapper orderMapper;
 
     private final JooqRepository jooqRepository;
-
 
     @SneakyThrows
     @Override
@@ -67,9 +63,10 @@ public class WorkshopServiceImpl implements WorkshopService {
     public Long addCar(final CarDto carDto) {
         final Car car = carMapper.toCar(carDto);
         final Car savedCar = carRepo.save(car);
-
-        final Customer customer = customerRepo.findById(carDto.getCustomerId()).orElseThrow(() -> new RuntimeException("Customer not found"));
-
+        final Customer customer = customerRepo.findById(carDto.getCustomerId()).orElseThrow(() -> {
+            log.error("Customer not found for id: {}", carDto.getCustomerId());
+            throw EntityNotFoundException.customer();
+        });
         customer.getCars().add(car);
         customerRepo.save(customer);
 
@@ -78,8 +75,14 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     @Override
     public Long addOrder(final OrderDto orderDto) {
-        final Car car = carRepo.findById(orderDto.getCarId()).orElseThrow(() -> new RuntimeException("Car not found"));
-        final Mechanic mechanic = mechanicRepo.findById(orderDto.getMechanicId()).orElseThrow(() -> new RuntimeException("Mechanic not found"));
+        final Car car = carRepo.findById(orderDto.getCarId()).orElseThrow(() -> {
+            log.error("Car not found for id: {}", orderDto.getCarId());
+            throw EntityNotFoundException.car();
+        });
+        final Mechanic mechanic = mechanicRepo.findById(orderDto.getMechanicId()).orElseThrow(() -> {
+            log.error("Mechanic not found for id: {}", orderDto.getMechanicId());
+            throw EntityNotFoundException.mechanic();
+        });
         final Order order = orderMapper.toOrder(orderDto);
         order.setCar(car);
         order.setMechanic(mechanic);
@@ -89,5 +92,20 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     public Long addMechanic(final MechanicDto mechanicDto) {
         return mechanicRepo.save(mechanicMapper.toMechanic(mechanicDto)).getId();
+    }
+
+    @Override
+    public void addCarToCustomer(final Long carId, final Long customerId) {
+        final Customer customer = customerRepo.findById(customerId).orElseThrow(() -> {
+            log.error("Customer not found for id: {}", customerId);
+            throw EntityNotFoundException.customer();
+        });
+        final Car car = carRepo.findById(carId).orElseThrow(() -> {
+            log.error("Car not found for id: {}", carId);
+            throw EntityNotFoundException.car();
+        });
+
+        customer.getCars().add(car);
+        customerRepo.save(customer);
     }
 }

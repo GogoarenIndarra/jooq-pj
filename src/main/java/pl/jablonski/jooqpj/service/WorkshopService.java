@@ -21,4 +21,6 @@ public interface WorkshopService {
     Long addOrder(OrderDto orderDto);
 
     Long addMechanic(MechanicDto mechanicDto);
+
+    void addCarToCustomer(Long carId, Long customerId);
 }

@@ -17,15 +17,15 @@ public class ConnectionManager {
     private static final String USER_NAME = "postgres";
     private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://localhost:5432/jooqdb";
-    private static Connection con;
+    private static Connection connection;
 
 
     public static DSLContext getConnection() {
         try {
-            con = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         } catch (SQLException ex) {
             log.error("Failed to create the database connection.");
         }
-        return DSL.using(con, SQLDialect.POSTGRES);
+        return DSL.using(connection, SQLDialect.POSTGRES);
     }
 }
