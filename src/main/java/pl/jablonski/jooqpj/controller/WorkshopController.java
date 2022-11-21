@@ -1,4 +1,4 @@
-package pl.jablonski.jooqpj;
+package pl.jablonski.jooqpj.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import pl.jablonski.jooqpj.dto.CarDto;
 import pl.jablonski.jooqpj.dto.CustomerDto;
 import pl.jablonski.jooqpj.dto.MechanicDto;
 import pl.jablonski.jooqpj.dto.OrderDto;
-import pl.jablonski.jooqpj.dbinsert.DataBaseInitialization;
 import pl.jablonski.jooqpj.service.WorkshopService;
 
 import java.time.LocalDate;
@@ -23,27 +22,7 @@ import java.time.LocalDate;
 class WorkshopController {
 
     private final WorkshopService service;
-    private final DataBaseInitialization fakerService;
 
-    @PostMapping("/init/mechanics")
-    void initDataBaseMechanics(@RequestParam final int numOfMechanics) {
-        fakerService.initDataBaseWithMechanics(numOfMechanics);
-    }
-
-    @PostMapping("/init/customers")
-    void initDataBaseCustomers(@RequestParam final int numOfCustomers) {
-        fakerService.initDataBaseWithCustomers(numOfCustomers);
-    }
-
-    @PostMapping("/init/cars")
-    void initDataBaseCars(@RequestParam final int numOfCarsPerCustomer) {
-        fakerService.initDataBaseAddCars();
-    }
-
-    @PostMapping("/init/orders")
-    void initDataBaseOrders(@RequestParam final int numOfOrders) {
-        fakerService.initDataBaseAddOrders(numOfOrders);
-    }
 
     @GetMapping("/best")
     String getBestMechanic(@RequestParam final String carBrand,
@@ -51,6 +30,12 @@ class WorkshopController {
                            @RequestParam final int minOrdersCount,
                            @RequestParam final String problemDescription) {
         return service.getBestMechanic(carBrand, LocalDate.parse(from), minOrdersCount, problemDescription);
+    }
+
+    @GetMapping("/discount")
+    String getBestMechanic(@RequestParam final Long customerId,
+                           @RequestParam final String from) {
+        return service.getMoneySpendByCustomer(customerId, LocalDate.parse(from));
     }
 
     @PostMapping("/customer")

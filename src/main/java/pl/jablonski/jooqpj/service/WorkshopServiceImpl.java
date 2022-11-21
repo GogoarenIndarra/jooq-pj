@@ -53,6 +53,11 @@ public class WorkshopServiceImpl implements WorkshopService {
     }
 
     @Override
+    public String getMoneySpendByCustomer(final Long customerId, final LocalDate from) {
+        return jooqRepository.getMoneySpendByCustomer(customerId, from);
+    }
+
+    @Override
     public Long addCustomer(final CustomerDto customerDto) {
         final Customer customer = customerMapper.toCustomer(customerDto);
         return customerRepo.save(customer).getId();
