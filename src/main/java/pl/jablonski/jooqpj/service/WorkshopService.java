@@ -14,6 +14,8 @@ public interface WorkshopService {
                            int minOrdersCount,
                            String problemDescription);
 
+    String getMoneySpendByCustomer(Long customerId, LocalDate from);
+
     Long addCustomer(CustomerDto customerDto);
 
     Long addCar(CarDto carDto);

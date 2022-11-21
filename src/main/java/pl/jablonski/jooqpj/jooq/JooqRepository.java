@@ -9,4 +9,6 @@ public interface JooqRepository {
                                    LocalDate from,
                                    int minOrdersCount,
                                    String problemDescription) throws SQLException;
+
+    String getMoneySpendByCustomer(Long customerId, LocalDate from);
 }
