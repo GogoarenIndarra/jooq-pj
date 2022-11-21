@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+
+    <changeSet id="create-cars" author="p.jablonski">
+        <createTable tableName="cars" schemaName="public">
+            <column name="id" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="brand" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-customers" author="p.jablonski">
+        <createTable tableName="customers" schemaName="public">
+            <column name="id" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-mechanics" author="p.jablonski">
+        <createTable tableName="mechanics" schemaName="public">
+            <column name="id" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-orders" author="p.jablonski">
+        <createTable tableName="orders" schemaName="public">
+            <column name="id" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="price" type="java.math.BigDecimal"> </column>
+            <column name="finish_date" type="date"> </column>
+            <column name="start_date" type="date"> </column>
+            <column name="description" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mechanic_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
